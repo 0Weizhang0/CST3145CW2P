@@ -1,11 +1,14 @@
-var express = require("express");
-var app = express('express');
-var cors = require('cors');
-var mongoClient = require("mongodb").MongoClient //声明标识符
+const express = require("express");
+const app = express('express');
+const cors = require('cors');
+
+app.use (cors())
+
+const mongoClient = require("mongodb").MongoClient //声明标识符
 let db
 
 mongoClient.connect('mongodb+srv://wei:jklasd@lesson.0zazi.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', (err, client) => {
-    db = client.db('cst3145cw2p')
+    db = client.db('lesson3145')
 })
 //链接到mongodb数据库
 app.use(express.static('static'));
@@ -43,17 +46,18 @@ app.get('/collection/:collectionName/:lesson/:aaa', (req, res, next) => {
     })
 })
 
-app.get('/collection/:collectionName/:lesson/:aaa', (req, res, next) => {
-req.collection.find({}, {limit: 5, sort: [['price', -1]]})
+app.get('/collection/:collectionName/', (req, res, next) => {
+req.collection.find({}, {limit: 10, sort: [['price', -1]]})
 .toArray((e, results) => {
 if (e) return next(e)
 res.send(results)
 })
 })
+//价格降序10个项目
 
-//GET all lessons
-app.get("/collection/:collectionName/:lesson/:aaa", async (req, res) => {
+app.get("/collection/:collectionName/", async (req, res) => {
     res.json(await getLessons(req.collection, "", req.sortBy, req.sortOrder));
 });
+//获取全部项目
 
 app.listen(3000)
