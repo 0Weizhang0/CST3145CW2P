@@ -39,25 +39,32 @@ app.get('/',(req,res,next) => {
 })
 //主页面
 
-app.get('/collection/:collectionName/:lesson/:aaa', (req, res, next) => {
+app.get('/collection/:collectionName', (req, res, next) => {
     req.collection.find({}).toArray((e, results) => {
     if (e) return next(e)
     res.send(results)
     })
 })
 
-app.get('/collection/:collectionName/', (req, res, next) => {
+/*app.get('/collection/:collectionName', (req, res, next) => {
 req.collection.find({}, {limit: 10, sort: [['price', -1]]})
 .toArray((e, results) => {
 if (e) return next(e)
 res.send(results)
 })
-})
+})*/
 //价格降序10个项目
 
-app.get("/collection/:collectionName/", async (req, res) => {
-    res.json(await getLessons(req.collection, "", req.sortBy, req.sortOrder));
-});
-//获取全部项目
+app.post('/collection/:collectionName'
+, (req, res, next) => {
+req.collection.insert(req.body, (e, results) => {
+if (e) return next(e)
+res.send(results.ops)
+})
+})
+//新增项目
 
-app.listen(3000)
+//app.listen(3000)
+
+const port = process.env.PORT || 3000
+app.listen(port)
